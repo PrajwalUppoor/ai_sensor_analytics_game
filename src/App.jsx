@@ -85,7 +85,7 @@ function XPBar({current,max,color}){
   const pct = Math.min(100,(current/max)*100);
   return (
     <div style={{background:"#111",borderRadius:8,height:10,overflow:"hidden",border:"1px solid #1e1e1e"}}>
-      <div style={{height:"100%",width:\`\${pct}%\`,background:\`linear-gradient(90deg,\${color},\${color}88)\`,transition:"width 0.7s cubic-bezier(.4,0,.2,1)",borderRadius:8,boxShadow:\`0 0 10px \${color}66\`}}/>
+      <div style={{height:"100%",width:`${pct}%`,background:`linear-gradient(90deg,${color},${color}88)`,transition:"width 0.7s cubic-bezier(.4,0,.2,1)",borderRadius:8,boxShadow:`0 0 10px ${color}66`}}/>
     </div>
   );
 }
@@ -99,7 +99,7 @@ function StreakBadge({streak}){
   const mult = streak>=5?3:streak>=3?2:1;
   const col  = streak>=5?"#fc5c65":streak>=3?"#f7b731":"#00f5d4";
   return (
-    <div style={{display:"flex",alignItems:"center",gap:6,background:\`\${col}22\`,border:\`1px solid \${col}77\`,borderRadius:20,padding:"4px 10px",animation:"pulse 1.2s infinite"}}>
+    <div style={{display:"flex",alignItems:"center",gap:6,background:`${col}22`,border:`1px solid ${col}77`,borderRadius:20,padding:"4px 10px",animation:"pulse 1.2s infinite"}}>
       <span style={{fontSize:14}}>🔥</span>
       <span style={{color:col,fontWeight:900,fontSize:12,fontFamily:"Orbitron,monospace"}}>{streak}×</span>
       {mult>1&&<span style={{background:col,color:"#000",borderRadius:8,padding:"1px 7px",fontSize:10,fontWeight:900}}>{mult}× XP</span>}
@@ -111,8 +111,8 @@ function FloatingXP({items}){
   return (
     <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:9999}}>
       {items.map(it=>(
-        <div key={it.id} style={{position:"absolute",top:it.y,left:it.x,fontSize:20,fontWeight:900,fontFamily:"Orbitron,monospace",color:it.correct?"#2ecc71":"#e74c3c",animation:"floatUp 1.1s ease-out forwards",whiteSpace:"nowrap",textShadow:\`0 0 10px \${it.correct?"#2ecc71":"#e74c3c"}\`}}>
-          {it.correct?\`+\${it.xp} XP\`:"-1 ❤️"}
+        <div key={it.id} style={{position:"absolute",top:it.y,left:it.x,fontSize:20,fontWeight:900,fontFamily:"Orbitron,monospace",color:it.correct?"#2ecc71":"#e74c3c",animation:"floatUp 1.1s ease-out forwards",whiteSpace:"nowrap",textShadow:`0 0 10px ${it.correct?"#2ecc71":"#e74c3c"}`}}>
+          {it.correct?`+${it.xp} XP`:"-1 ❤️"}
         </div>
       ))}
     </div>
@@ -143,7 +143,7 @@ function TimerRing({secs,total,color}){
         <circle cx="27" cy="27" r={r} fill="none" stroke="#1e1e1e" strokeWidth="4"/>
         <circle cx="27" cy="27" r={r} fill="none" stroke={urg?"#fc5c65":color} strokeWidth="4"
           strokeDasharray={circ} strokeDashoffset={circ*(1-pct)}
-          style={{transition:"stroke-dashoffset 0.85s linear",filter:\`drop-shadow(0 0 4px \${urg?"#fc5c65":color})\`}}/>
+          style={{transition:"stroke-dashoffset 0.85s linear",filter:`drop-shadow(0 0 4px ${urg?"#fc5c65":color})`}}/>
       </svg>
       <span style={{fontFamily:"Orbitron,monospace",fontWeight:900,fontSize:13,color:urg?"#fc5c65":color,animation:urg?"urgBlink 0.55s infinite":""}}>{secs}</span>
     </div>
@@ -179,7 +179,7 @@ function MCQQuestion({q,onAnswer,color}){
     setTimeout(()=>onAnswer(ok),1100);
   };
 
-  const bg  = (i)=>{ if(!done) return sel.includes(i)?\`\${color}1e\`:"rgba(255,255,255,0.03)"; if(q.correct.includes(i)) return "rgba(46,204,113,0.18)"; if(sel.includes(i)) return "rgba(231,76,60,0.18)"; return "rgba(255,255,255,0.015)"; };
+  const bg  = (i)=>{ if(!done) return sel.includes(i)?`${color}1e`:"rgba(255,255,255,0.03)"; if(q.correct.includes(i)) return "rgba(46,204,113,0.18)"; if(sel.includes(i)) return "rgba(231,76,60,0.18)"; return "rgba(255,255,255,0.015)"; };
   const bd  = (i)=>{ if(!done) return sel.includes(i)?color:"#232323"; if(q.correct.includes(i)) return "#2ecc71"; if(sel.includes(i)) return "#e74c3c"; return "#181818"; };
   const fc  = (i)=>{ if(!done) return sel.includes(i)?color:"#aaa"; if(q.correct.includes(i)) return "#2ecc71"; if(sel.includes(i)) return "#e74c3c"; return "#444"; };
   const icon= (i)=>{ if(done&&q.correct.includes(i)) return "✓"; if(done&&sel.includes(i)) return "✗"; return q.multi?(sel.includes(i)?"☑":"☐"):(sel.includes(i)?"◉":"○"); };
@@ -188,13 +188,13 @@ function MCQQuestion({q,onAnswer,color}){
     <div>
       {q.multi&&<div style={{fontSize:11,color:"#666",marginBottom:10,letterSpacing:1}}>SELECT ALL THAT APPLY</div>}
       {q.opts.map((opt,i)=>(
-        <div key={i} onClick={()=>toggle(i)} style={{padding:"11px 16px",borderRadius:10,border:\`1.5px solid \${bd(i)}\`,background:bg(i),color:fc(i),cursor:done?"default":"pointer",marginBottom:8,fontSize:14,display:"flex",alignItems:"center",gap:10,transition:"all 0.16s",userSelect:"none"}}>
+        <div key={i} onClick={()=>toggle(i)} style={{padding:"11px 16px",borderRadius:10,border:`1.5px solid ${bd(i)}`,background:bg(i),color:fc(i),cursor:done?"default":"pointer",marginBottom:8,fontSize:14,display:"flex",alignItems:"center",gap:10,transition:"all 0.16s",userSelect:"none"}}>
           <span style={{fontSize:15,flexShrink:0,fontFamily:"monospace"}}>{icon(i)}</span>
           {opt}
         </div>
       ))}
       {!done&&(
-        <button onClick={submit} disabled={!sel.length} style={{marginTop:6,padding:"10px 30px",background:sel.length?\`linear-gradient(135deg,\${color},#0090ff)\`:"#1e1e1e",border:"none",borderRadius:10,color:sel.length?"#000":"#444",fontWeight:900,cursor:sel.length?"pointer":"not-allowed",fontSize:13,fontFamily:"Orbitron,monospace",letterSpacing:2}}>
+        <button onClick={submit} disabled={!sel.length} style={{marginTop:6,padding:"10px 30px",background:sel.length?`linear-gradient(135deg,${color},#0090ff)`:"#1e1e1e",border:"none",borderRadius:10,color:sel.length?"#000":"#444",fontWeight:900,cursor:sel.length?"pointer":"not-allowed",fontSize:13,fontFamily:"Orbitron,monospace",letterSpacing:2}}>
           CONFIRM
         </button>
       )}
@@ -226,7 +226,7 @@ function MatchQuestion({q,onAnswer,color}){
   };
 
   const lBorder=(i)=>{ if(!done) return active===i?color:matches[i]!==undefined?"#a55eea":"#232323"; return matches[i]===i?"#2ecc71":"#e74c3c"; };
-  const rBorder=(origIdx)=>{ const li=Object.entries(matches).find(([,v])=>v===origIdx)?.[0]; if(!done) return active!==null&&!used.includes(origIdx)?\`\${color}77\`:used.includes(origIdx)?"#a55eea":"#232323"; if(li===undefined) return "#232323"; return Number(li)===origIdx?"#2ecc71":"#e74c3c"; };
+  const rBorder=(origIdx)=>{ const li=Object.entries(matches).find(([,v])=>v===origIdx)?.[0]; if(!done) return active!==null&&!used.includes(origIdx)?`${color}77`:used.includes(origIdx)?"#a55eea":"#232323"; if(li===undefined) return "#232323"; return Number(li)===origIdx?"#2ecc71":"#e74c3c"; };
 
   return (
     <div>
@@ -236,7 +236,7 @@ function MatchQuestion({q,onAnswer,color}){
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0 14px"}}>
         <div>
           {q.pairs.map((_,i)=>(
-            <div key={i} onClick={()=>pickLeft(i)} style={{padding:"10px 12px",borderRadius:10,border:\`1.5px solid \${lBorder(i)}\`,background:active===i?\`\${color}1e\`:"rgba(255,255,255,0.03)",color:"#ddd",cursor:done?"default":"pointer",marginBottom:8,fontSize:13,transition:"all 0.15s",userSelect:"none"}}>
+            <div key={i} onClick={()=>pickLeft(i)} style={{padding:"10px 12px",borderRadius:10,border:`1.5px solid ${lBorder(i)}`,background:active===i?`${color}1e`:"rgba(255,255,255,0.03)",color:"#ddd",cursor:done?"default":"pointer",marginBottom:8,fontSize:13,transition:"all 0.15s",userSelect:"none"}}>
               <div style={{display:"flex",alignItems:"center",gap:7}}>
                 <span style={{color:active===i?color:"#444",fontSize:12}}>{active===i?"▶":"○"}</span>
                 {q.pairs[i].left}
@@ -247,7 +247,7 @@ function MatchQuestion({q,onAnswer,color}){
         </div>
         <div>
           {shuffled.map(origIdx=>(
-            <div key={origIdx} onClick={()=>pickRight(origIdx)} style={{padding:"10px 12px",borderRadius:10,border:\`1.5px solid \${rBorder(origIdx)}\`,background:used.includes(origIdx)?"rgba(165,94,234,0.12)":"rgba(255,255,255,0.03)",color:used.includes(origIdx)?"#c9a0ff":"#ddd",cursor:(done||used.includes(origIdx))?"default":"pointer",marginBottom:8,fontSize:13,transition:"all 0.15s",userSelect:"none",opacity:used.includes(origIdx)&&active!==null?0.45:1}}>
+            <div key={origIdx} onClick={()=>pickRight(origIdx)} style={{padding:"10px 12px",borderRadius:10,border:`1.5px solid ${rBorder(origIdx)}`,background:used.includes(origIdx)?"rgba(165,94,234,0.12)":"rgba(255,255,255,0.03)",color:used.includes(origIdx)?"#c9a0ff":"#ddd",cursor:(done||used.includes(origIdx))?"default":"pointer",marginBottom:8,fontSize:13,transition:"all 0.15s",userSelect:"none",opacity:used.includes(origIdx)&&active!==null?0.45:1}}>
               {q.pairs[origIdx].right}
             </div>
           ))}
@@ -283,13 +283,13 @@ function OrderQuestion({q,onAnswer,color}){
     <div>
       <div style={{marginBottom:14}}>
         <div style={{fontSize:11,color:"#888",letterSpacing:1,marginBottom:8}}>YOUR SEQUENCE:</div>
-        <div style={{minHeight:46,background:"rgba(255,255,255,0.02)",borderRadius:12,border:\`1.5px dashed \${color}44\`,padding:8,display:"flex",flexWrap:"wrap",gap:7,alignItems:"center"}}>
+        <div style={{minHeight:46,background:"rgba(255,255,255,0.02)",borderRadius:12,border:`1.5px dashed ${color}44`,padding:8,display:"flex",flexWrap:"wrap",gap:7,alignItems:"center"}}>
           {seq.length===0&&<span style={{color:"#333",fontSize:13}}>Tap steps below to build the pipeline…</span>}
           {seq.map((si,pos)=>{
             const ok=done&&si===q.correct[pos];
             const bad=done&&si!==q.correct[pos];
             return (
-              <div key={pos} onClick={()=>remove(pos)} style={{padding:"5px 11px",borderRadius:8,border:\`1.5px solid \${ok?"#2ecc71":bad?"#e74c3c":color}\`,background:ok?"rgba(46,204,113,0.15)":bad?"rgba(231,76,60,0.12)":\`\${color}18\`,color:ok?"#2ecc71":bad?"#e74c3c":color,fontSize:12,fontWeight:700,cursor:done?"default":"pointer",display:"flex",alignItems:"center",gap:5,userSelect:"none"}}>
+              <div key={pos} onClick={()=>remove(pos)} style={{padding:"5px 11px",borderRadius:8,border:`1.5px solid ${ok?"#2ecc71":bad?"#e74c3c":color}`,background:ok?"rgba(46,204,113,0.15)":bad?"rgba(231,76,60,0.12)":`${color}18`,color:ok?"#2ecc71":bad?"#e74c3c":color,fontSize:12,fontWeight:700,cursor:done?"default":"pointer",display:"flex",alignItems:"center",gap:5,userSelect:"none"}}>
                 <span style={{opacity:0.5,fontSize:10}}>{pos+1}.</span>{q.steps[si]}{!done&&<span style={{opacity:0.35,fontSize:9}}>✕</span>}{ok&&"✓"}{bad&&"✗"}
               </div>
             );
@@ -301,7 +301,7 @@ function OrderQuestion({q,onAnswer,color}){
         {pool.map(idx=>{
           const used=seq.includes(idx);
           return (
-            <div key={idx} onClick={()=>add(idx)} style={{padding:"7px 13px",borderRadius:9,border:\`1.5px solid \${used?"#1a1a1a":"#2e2e2e"}\`,background:used?"rgba(255,255,255,0.01)":"rgba(255,255,255,0.05)",color:used?"#2a2a2a":"#ccc",cursor:used?"default":"pointer",fontSize:13,transition:"all 0.15s",userSelect:"none",opacity:used?0.35:1,textDecoration:used?"line-through":"none"}}>
+            <div key={idx} onClick={()=>add(idx)} style={{padding:"7px 13px",borderRadius:9,border:`1.5px solid ${used?"#1a1a1a":"#2e2e2e"}`,background:used?"rgba(255,255,255,0.01)":"rgba(255,255,255,0.05)",color:used?"#2a2a2a":"#ccc",cursor:used?"default":"pointer",fontSize:13,transition:"all 0.15s",userSelect:"none",opacity:used?0.35:1,textDecoration:used?"line-through":"none"}}>
               {q.steps[idx]}
             </div>
           );
@@ -309,7 +309,7 @@ function OrderQuestion({q,onAnswer,color}){
       </div>
       {!done&&(
         <div style={{display:"flex",gap:10}}>
-          <button onClick={submit} disabled={seq.length<q.steps.length} style={{padding:"10px 30px",background:seq.length>=q.steps.length?\`linear-gradient(135deg,#a55eea,#0090ff)\`:"#1e1e1e",border:"none",borderRadius:10,color:seq.length>=q.steps.length?"#fff":"#444",fontWeight:900,cursor:seq.length>=q.steps.length?"pointer":"not-allowed",fontSize:13,fontFamily:"Orbitron,monospace",letterSpacing:2}}>
+          <button onClick={submit} disabled={seq.length<q.steps.length} style={{padding:"10px 30px",background:seq.length>=q.steps.length?`linear-gradient(135deg,#a55eea,#0090ff)`:"#1e1e1e",border:"none",borderRadius:10,color:seq.length>=q.steps.length?"#fff":"#444",fontWeight:900,cursor:seq.length>=q.steps.length?"pointer":"not-allowed",fontSize:13,fontFamily:"Orbitron,monospace",letterSpacing:2}}>
             CONFIRM
           </button>
           <button onClick={()=>setSeq([])} style={{padding:"10px 14px",background:"transparent",border:"1px solid #2a2a2a",borderRadius:10,color:"#555",cursor:"pointer",fontSize:12}}>
@@ -335,7 +335,7 @@ function HomeScreen({onStart}){
 
       <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:10,maxWidth:640,margin:"0 auto 36px"}}>
         {MISSIONS.map((m,i)=>(
-          <div key={m.id} style={{padding:"14px 6px",borderRadius:12,border:\`1.5px solid \${m.color}2a\`,background:\`\${m.color}0a\`,color:m.color,animation:\`slideIn \${0.2+i*0.08}s ease-out\`}}>
+          <div key={m.id} style={{padding:"14px 6px",borderRadius:12,border:`1.5px solid ${m.color}2a`,background:`${m.color}0a`,color:m.color,animation:`slideIn ${0.2+i*0.08}s ease-out`}}>
             <div style={{fontSize:24}}>{m.icon}</div>
             <div style={{fontSize:9,fontFamily:"Orbitron,monospace",marginTop:4,opacity:0.8}}>M{m.id}</div>
             <div style={{fontSize:10,color:"#888",marginTop:2,lineHeight:1.3}}>{m.title}</div>
@@ -344,7 +344,7 @@ function HomeScreen({onStart}){
       </div>
 
       <div style={{display:"flex",justifyContent:"center",gap:28,marginBottom:36}}>
-        {[["5","Missions"],["19","Questions"],[\`\${TOTAL_MAX_XP}\`,"Max XP"],["3","Lives"],["8","Achievements"]].map(([v,l])=>(
+        {[["5","Missions"],["19","Questions"],[`${TOTAL_MAX_XP}`,"Max XP"],["3","Lives"],["8","Achievements"]].map(([v,l])=>(
           <div key={l} style={{textAlign:"center"}}>
             <div style={{fontFamily:"Orbitron,monospace",fontSize:20,fontWeight:900,color:"#00f5d4"}}>{v}</div>
             <div style={{fontSize:10,color:"#444",letterSpacing:1,marginTop:2}}>{l}</div>
@@ -386,9 +386,9 @@ function MissionSelect({completedMissions,missionStars,score,lives,streak,onSele
           const stars=missionStars[m.id]||0;
           return (
             <div key={m.id} onClick={()=>!locked&&onSelect(m)}
-              style={{padding:"15px 16px",borderRadius:13,border:\`1.5px solid \${done?m.color:locked?"#161616":\`\${m.color}44\`}\`,background:done?\`\${m.color}10\`:locked?"rgba(0,0,0,0.2)":"rgba(255,255,255,0.025)",cursor:locked?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:14,transition:"all 0.18s",opacity:locked?0.3:1,animation:\`slideIn \${0.1+idx*0.07}s ease-out\`}}
-              onMouseEnter={e=>{ if(!locked) e.currentTarget.style.background=done?\`\${m.color}1e\`:\`\${m.color}0e\`; }}
-              onMouseLeave={e=>{ e.currentTarget.style.background=done?\`\${m.color}10\`:locked?"rgba(0,0,0,0.2)":"rgba(255,255,255,0.025)"; }}>
+              style={{padding:"15px 16px",borderRadius:13,border:`1.5px solid ${done?m.color:locked?"#161616":`${m.color}44`}`,background:done?`${m.color}10`:locked?"rgba(0,0,0,0.2)":"rgba(255,255,255,0.025)",cursor:locked?"not-allowed":"pointer",display:"flex",alignItems:"center",gap:14,transition:"all 0.18s",opacity:locked?0.3:1,animation:`slideIn ${0.1+idx*0.07}s ease-out`}}
+              onMouseEnter={e=>{ if(!locked) e.currentTarget.style.background=done?`${m.color}1e`:`${m.color}0e`; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background=done?`${m.color}10`:locked?"rgba(0,0,0,0.2)":"rgba(255,255,255,0.025)"; }}>
               <span style={{fontSize:26}}>{locked?"🔒":m.icon}</span>
               <div style={{flex:1}}>
                 <div style={{fontSize:9,color:m.color,letterSpacing:2,fontFamily:"Orbitron,monospace"}}>MISSION {m.id}</div>
@@ -451,7 +451,7 @@ function QuestionScreen({mission,questionIdx,lives,streak,score,onAnswer,onBack}
           </div>
           <div style={{display:"flex",gap:4}}>
             {mission.questions.map((_,i)=>(
-              <div key={i} style={{height:4,flex:1,borderRadius:4,background:i<questionIdx?mission.color:i===questionIdx?\`\${mission.color}66\`:"#1a1a1a",transition:"background 0.4s"}}/>
+              <div key={i} style={{height:4,flex:1,borderRadius:4,background:i<questionIdx?mission.color:i===questionIdx?`${mission.color}66`:"#1a1a1a",transition:"background 0.4s"}}/>
             ))}
           </div>
         </div>
@@ -468,7 +468,7 @@ function QuestionScreen({mission,questionIdx,lives,streak,score,onAnswer,onBack}
       </div>
 
       {/* Card */}
-      <div style={{background:"rgba(255,255,255,0.02)",border:\`1px solid \${mission.color}2e\`,borderRadius:16,padding:"18px",marginBottom:14,position:"relative",overflow:"hidden"}}>
+      <div style={{background:"rgba(255,255,255,0.02)",border:`1px solid ${mission.color}2e`,borderRadius:16,padding:"18px",marginBottom:14,position:"relative",overflow:"hidden"}}>
         <div style={{position:"absolute",top:0,left:0,width:"3px",height:"100%",background:mission.color}}/>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}>
           <span style={{fontSize:10,color:"#555",letterSpacing:1}}>{q.type==="mcq"?"MULTIPLE CHOICE":q.type==="match"?"MATCHING":"ORDERING"}</span>
@@ -487,11 +487,11 @@ function QuestionScreen({mission,questionIdx,lives,streak,score,onAnswer,onBack}
         <div style={{position:"fixed",inset:0,background:"rgba(5,5,12,0.92)",zIndex:9000,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24,animation:"slideIn 0.2s"}}>
           <div style={{fontSize:64,marginBottom:10,animation:"pulse 0.4s"}}>{feedback.timeout?"⏰":feedback.correct?"✅":"❌"}</div>
           <div style={{fontFamily:"Orbitron,monospace",fontSize:"clamp(16px,4vw,26px)",fontWeight:900,color:feedback.correct?"#2ecc71":"#e74c3c",marginBottom:6}}>
-            {feedback.timeout?"TIME'S UP!":feedback.correct?\`+\${feedback.finalXp} XP EARNED!\`:"INCORRECT"}
+            {feedback.timeout?"TIME'S UP!":feedback.correct?`+${feedback.finalXp} XP EARNED!`:"INCORRECT"}
           </div>
           {feedback.correct&&feedback.mult>1&&<div style={{color:"#f7b731",fontSize:13,fontFamily:"Orbitron,monospace",marginBottom:4}}>{feedback.mult}× STREAK MULTIPLIER!</div>}
-          {feedback.correct&&feedback.spd>0&&<div style={{color:"#00f5d4",fontSize:12,marginBottom:6}}>⚡ SPEED BONUS +\{feedback.spd} XP</div>}
-          <div style={{maxWidth:460,background:"rgba(255,255,255,0.04)",borderRadius:14,padding:"14px 20px",border:\`1px solid \${feedback.correct?"#2ecc7122":"#e74c3c22"}\`,color:"#bbb",fontSize:14,lineHeight:1.7,textAlign:"center",marginTop:8}}>
+          {feedback.correct&&feedback.spd>0&&<div style={{color:"#00f5d4",fontSize:12,marginBottom:6}}>⚡ SPEED BONUS +{feedback.spd} XP</div>}
+          <div style={{maxWidth:460,background:"rgba(255,255,255,0.04)",borderRadius:14,padding:"14px 20px",border:`1px solid ${feedback.correct?"#2ecc7122":"#e74c3c22"}`,color:"#bbb",fontSize:14,lineHeight:1.7,textAlign:"center",marginTop:8}}>
             <div style={{fontSize:9,color:"#555",letterSpacing:2,marginBottom:6}}>💡 EXPLANATION</div>
             {q.explanation}
           </div>
@@ -526,14 +526,14 @@ function FinalScreen({score,missionStars,unlockedAchievements,onRestart}){
   return (
     <div style={{padding:"28px 18px 60px",position:"relative",zIndex:1,animation:"slideIn 0.5s",maxWidth:600,margin:"0 auto"}}>
       <div style={{textAlign:"center",marginBottom:24}}>
-        <div style={{fontSize:70,filter:\`drop-shadow(0 0 22px \${grade.color})\`}}>{grade.icon}</div>
-        <h2 style={{fontFamily:"Orbitron,monospace",color:grade.color,fontSize:"clamp(18px,5vw,30px)",margin:"10px 0 4px",textShadow:\`0 0 22px \${grade.color}\`,letterSpacing:3}}>{grade.label}</h2>
+        <div style={{fontSize:70,filter:`drop-shadow(0 0 22px ${grade.color})`}}>{grade.icon}</div>
+        <h2 style={{fontFamily:"Orbitron,monospace",color:grade.color,fontSize:"clamp(18px,5vw,30px)",margin:"10px 0 4px",textShadow:`0 0 22px ${grade.color}`,letterSpacing:3}}>{grade.label}</h2>
         <p style={{color:"#555",fontSize:12}}>All missions complete</p>
       </div>
 
-      <div style={{background:"rgba(255,255,255,0.035)",border:\`1.5px solid \${grade.color}33\`,borderRadius:16,padding:"20px",marginBottom:16,textAlign:"center"}}>
+      <div style={{background:"rgba(255,255,255,0.035)",border:`1.5px solid ${grade.color}33`,borderRadius:16,padding:"20px",marginBottom:16,textAlign:"center"}}>
         <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,marginBottom:16}}>
-          {[["XP EARNED",score],["ACCURACY",\`\${pct}%\`],["STARS",\`\${totalStars}/15\`]].map(([l,v])=>(
+          {[["XP EARNED",score],["ACCURACY",`${pct}%`],["STARS",`${totalStars}/15`]].map(([l,v])=>(
             <div key={l}>
               <div style={{fontFamily:"Orbitron,monospace",fontSize:24,fontWeight:900,color:grade.color}}>{v}</div>
               <div style={{color:"#444",fontSize:9,letterSpacing:2,marginTop:2}}>{l}</div>
@@ -547,7 +547,7 @@ function FinalScreen({score,missionStars,unlockedAchievements,onRestart}){
         <div style={{fontSize:10,color:"#444",letterSpacing:2,marginBottom:10}}>MISSION BREAKDOWN</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
           {MISSIONS.map(m=>(
-            <div key={m.id} style={{padding:"11px 13px",borderRadius:12,background:"rgba(255,255,255,0.025)",border:\`1px solid \${m.color}22\`,display:"flex",alignItems:"center",gap:10}}>
+            <div key={m.id} style={{padding:"11px 13px",borderRadius:12,background:"rgba(255,255,255,0.025)",border:`1px solid ${m.color}22`,display:"flex",alignItems:"center",gap:10}}>
               <span style={{fontSize:20}}>{m.icon}</span>
               <div style={{flex:1}}>
                 <div style={{fontSize:11,color:"#ccc",fontWeight:600}}>{m.title}</div>
@@ -572,7 +572,7 @@ function FinalScreen({score,missionStars,unlockedAchievements,onRestart}){
         </div>
       )}
 
-      <button onClick={onRestart} style={{width:"100%",padding:"14px",background:\`linear-gradient(135deg,\${grade.color},#0090ff)\`,border:"none",borderRadius:13,color:"#000",fontSize:14,fontWeight:900,cursor:"pointer",letterSpacing:3,fontFamily:"Orbitron,monospace"}}>
+      <button onClick={onRestart} style={{width:"100%",padding:"14px",background:`linear-gradient(135deg,${grade.color},#0090ff)`,border:"none",borderRadius:13,color:"#000",fontSize:14,fontWeight:900,cursor:"pointer",letterSpacing:3,fontFamily:"Orbitron,monospace"}}>
         PLAY AGAIN
       </button>
     </div>
@@ -603,7 +603,7 @@ export default function App(){
 
   const spawnFloat=(correct,xp)=>{
     const id=fid.current++;
-    setFloats(f=>[...f,{id,x:\`\${28+Math.random()*44}%\`,y:\`\${25+Math.random()*22}%\`,correct,xp}]);
+    setFloats(f=>[...f,{id,x:`${28+Math.random()*44}%`,y:`${25+Math.random()*22}%`,correct,xp}]);
     setTimeout(()=>setFloats(f=>f.filter(i=>i.id!==id)),1300);
   };
 
