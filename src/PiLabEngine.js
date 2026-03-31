@@ -29,12 +29,16 @@ export class PiLabEngine {
       this.nodes.get(id).type = type; // Update type if already exists
     }
     return this.nodes.get(id);
+    this.peripherals = new Map();
   }
+
   initializeDTS() {
     // BANK 0 - USER GPIO (from minimal-cm-dt-blob.dts)
     for (let i = 0; i < 46; i++) {
       let pull = (i <= 8 || (i >= 34 && i <= 36)) ? "pull_up" : "pull_down";
       this.addNode(`pin-${i+1}`, "GPIO", pull);
+      this.nodes.get(`pin-${i+1}`).mode = "INPUT"; 
+      this.nodes.get(`pin-${i+1}`).logicState = 0; 
     }
     // BANK 2 - SD/STATUS
     this.addNode(`pin-status`, "LED_STATUS", "active_low");
@@ -46,8 +50,23 @@ export class PiLabEngine {
     });
   }
 
+  setPinMode(pin, mode) {
+    const node = this.nodes.get(`pin-${pin}`);
+    if (node) node.mode = mode;
+  }
+
+  setPinState(pin, val) {
+    const node = this.nodes.get(`pin-${pin}`);
+    if (node) node.logicState = val;
+  }
+
+  getPinState(pin) {
+    const node = this.nodes.get(`pin-${pin}`);
+    return node ? (node.potential > 1.8 ? 1 : 0) : 0;
+  }
+
   addNode(id, type = "INTERMEDIATE", pull = "no_pulling") {
-    this.nodes.set(id, { id, type, potential: 0, connections: [], pull, state: "OK" });
+    this.nodes.set(id, { id, type, potential: 0, connections: [], pull, state: "OK", mode: "INPUT", logicState: 0 });
     return this.nodes.get(id);
   }
 
@@ -66,6 +85,7 @@ export class PiLabEngine {
       if (node.type === "SOURCE_5V") node.potential = 5.0;
       else if (node.type === "SOURCE_3V") node.potential = 3.3;
       else if (node.type === "GND") node.potential = 0;
+      else if (node.mode === "OUTPUT" && node.logicState === 1) node.potential = 3.3; // Act like a source
       else {
         // Internal Pull Logic
         if (node.pull === "pull_up") node.potential = 3.3; 
@@ -75,7 +95,9 @@ export class PiLabEngine {
 
     const queue = [];
     this.nodes.forEach(node => {
-      if (node.type.startsWith("SOURCE")) queue.push(node);
+      if (node.type.startsWith("SOURCE") || (node.mode === "OUTPUT" && node.logicState === 1)) {
+        queue.push(node);
+      }
     });
 
     const visited = new Set();

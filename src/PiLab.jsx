@@ -60,9 +60,12 @@ export default function PiLab({ onBackToMenu }) {
   const [activeTab, setActiveTab] = useState("CODE"); // CODE | CLOUD | LOGS
   const [apiKey, setApiKey] = useState(null);
   const [history, setHistory] = useState([]);
+  const [isRunning, setIsRunning] = useState(false);
+  const [logs, setLogs] = useState([]);
   const [hoveredNode, setHoveredNode] = useState(null);
   const [selectedPart, setSelectedPart] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [engine] = useState(() => new PiLabEngine());
   const [simResults, setSimResults] = useState({ voltages: {}, faults: [] });
   const [code, setCode] = useState("# Raspberry Pi 5 Python\nimport RPi.GPIO as GPIO\nGPIO.setmode(GPIO.BCM)\nGPIO.setup(17, GPIO.OUT)\nGPIO.output(17, 1)");
@@ -70,27 +73,23 @@ export default function PiLab({ onBackToMenu }) {
   // ── CIRCUIT RE-RESOLUTION (WOKWI-STYLE JSON SYNC) ─────────────────────────
 
   useEffect(() => {
-    // Generate 'diagram.json' behind the scenes
-    const diagram = {
-      version: 1,
-      parts: parts.map(p => ({ id: p.id, type: p.type })),
-      connections: wires.map(w => [w.from, w.to, w.color])
-    };
-    
     // Sync to Engine
     engine.nodes.clear();
     PINOUT.forEach(p => engine.addNode(`pin-${p.p}`, p.type));
     wires.forEach(w => engine.addWire(w.from, w.to));
-    engine.resolve();
-
-    const vmap = {};
-    engine.nodes.forEach(n => vmap[n.id] = n.potential);
-    setSimResults({ voltages: vmap, faults: engine.isTripped ? ["SHORT"] : [] });
   }, [parts, wires]);
 
   // ── INTERACTION HANDLERS ─────────────────────────────────────────────────
 
-  const handleNodeClick = (id) => {
+  useEffect(() => {
+    const handleEsc = (e) => { 
+      if (e.key === "Escape") setActiveWire(null); 
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  function handleNodeClick(id) {
     if (activeProbe) {
       setMeterProbes(prev => ({ ...prev, [activeProbe]: id }));
       setActiveProbe(null);
@@ -99,7 +98,21 @@ export default function PiLab({ onBackToMenu }) {
     if (activeWire) {
       if (activeWire.from !== id) {
         setWires([...wires, { from: activeWire.from, to: id, color: activeWire.color }]);
-      }  // Cloud Sync Loop (Telemetry)
+      }
+      setActiveWire(null);
+    } else {
+      // Auto-Color Logic
+      let color = "#f7b731"; // Default Orange
+      if (id.startsWith("pin-")) {
+        const pinNum = parseInt(id.split("-")[1]);
+        const pinDef = PINOUT.find(p => p.p === pinNum);
+        if (pinDef?.type.startsWith("SOURCE")) color = "#eb4d4b"; // Red for Power
+        if (pinDef?.type === "GND") color = "#222"; // Black for Ground
+      }
+      setActiveWire({ from: id, color });
+    }
+  }
+
   useEffect(() => {
     if (!apiKey) return;
     const interval = setInterval(async () => {
@@ -108,11 +121,69 @@ export default function PiLab({ onBackToMenu }) {
     }, 5000);
     return () => clearInterval(interval);
   }, [apiKey]);
-      setActiveWire(null);
-    } else {
-      setActiveWire({ from: id, color: "#f7b731" });
+
+  const stopApp = () => {
+    setIsRunning(false);
+    setLogs(prev => [...prev, "[OK] Simulation Stopped."]);
+    // Reset all pins to DTS defaults
+    PINOUT.forEach(p => {
+      engine.setPinMode(p.p, "INPUT");
+      engine.setPinState(p.p, 0);
+    });
+  };
+
+  const runApp = async () => {
+    if (isRunning) stopApp();
+    setIsRunning(true);
+    setLogs([]);
+    setActiveTab("LOGS");
+
+    // RPi.GPIO Shim
+    const GPIO = {
+      OUT: "OUTPUT", IN: "INPUT", HIGH: 1, LOW: 0, BCM: "BCM",
+      setmode: () => {},
+      setup: (pin, mode) => engine.setPinMode(pin, mode),
+      output: (pin, val) => engine.setPinState(pin, val),
+      input: (pin) => engine.getPinState(pin),
+      cleanup: () => stopApp()
+    };
+
+    const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+    const print = (msg) => setLogs(prev => [...prev, `> ${msg}`]);
+
+    try {
+      const func = new Function("GPIO", "sleep", "print", "iot", `
+        (async () => {
+          try {
+            ${code}
+          } catch(e) {
+            print("RUNTIME ERROR: " + e.message);
+          }
+        })();
+      `);
+
+      func(GPIO, sleep, print, iotManager);
+      setLogs(prev => [...prev, "[OK] Script Started..."]);
+    } catch (err) {
+      setLogs(prev => [...prev, "[!] SYNTAX ERROR: " + err.message]);
+      setIsRunning(false);
     }
   };
+
+  // Main 60Hz Physics Resolver Loop
+  useEffect(() => {
+    let frame;
+    const loop = () => {
+      engine.resolve();
+      setSimResults({ 
+         voltages: Object.fromEntries(Array.from(engine.nodes.entries()).map(([k,v]) => [k, v.potential])),
+         faults: Array.from(engine.nodes.values()).filter(n => n.blown).map(n => n.id)
+      });
+      frame = requestAnimationFrame(loop);
+    };
+    loop();
+    return () => cancelAnimationFrame(frame);
+  }, [engine]);
 
   const deleteCircuit = () => { if(confirm("Clear current lab?")) { setWires([]); setParts([]); } };
 
@@ -187,7 +258,14 @@ export default function PiLab({ onBackToMenu }) {
         </div>
 
         {/* PRO SIMULATION AREA (SVG) */}
-        <svg width="100%" height="100%" style={{ background: "#080814" }}>
+        <svg 
+          width="100%" height="100%" 
+          style={{ background: "#080814" }}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+          }}
+        >
            <defs>
              <pattern id="dotGrid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#111" /></pattern>
            </defs>
@@ -283,14 +361,30 @@ export default function PiLab({ onBackToMenu }) {
               </foreignObject>
            ))}
 
-           {/* Wires */}
+           {/* Wires (Finalized) */}
            {wires.map((w, i) => {
               const start = getCoords(w.from, parts);
               const end = getCoords(w.to, parts);
               if (!start || !end) return null;
               const cpY = Math.min(start.y, end.y) - 40;
-              return <path key={i} d={`M ${start.x} ${start.y} Q ${(start.x+end.x)/2} ${cpY} ${end.x} ${end.y}`} fill="none" stroke={w.color} strokeWidth="2" strokeLinecap="round" />;
+              return <path key={i} d={`M ${start.x} ${start.y} Q ${(start.x+end.x)/2} ${cpY} ${end.x} ${end.y}`} fill="none" stroke={w.color} strokeWidth="2.5" strokeLinecap="round" style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.3))" }} />;
            })}
+
+           {/* Ghost Wire (Tinkercad-style) */}
+           {activeWire && (
+             <motion.path 
+               d={`M ${getCoords(activeWire.from, parts).x} ${getCoords(activeWire.from, parts).y} Q ${(getCoords(activeWire.from, parts).x + mousePos.x)/2} ${Math.min(getCoords(activeWire.from, parts).y, mousePos.y) - 50} ${mousePos.x} ${mousePos.y}`} 
+               stroke={activeWire.color} strokeWidth="3" fill="none" strokeDasharray="5,5" strokeLinecap="round" opacity="0.6"
+             />
+           )}
+
+           {/* Pin Snapping Halos */}
+           {hoveredNode && (
+             <motion.circle 
+               initial={{ scale: 1 }} animate={{ scale: [1, 1.5, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}
+               cx={getCoords(`pin-${hoveredNode.p}`, parts).x} cy={getCoords(`pin-${hoveredNode.p}`, parts).y} r="10" fill="#00f5d422" stroke="#00f5d444" 
+             />
+           )}
         </svg>
 
         {/* HUD: Mouse Annotations */}
@@ -373,7 +467,11 @@ export default function PiLab({ onBackToMenu }) {
                 <>
                   <div style={{ padding: "12px 20px", borderBottom: "1px solid #1c1c3f11", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontSize: "9px", color: "#444" }}>main.py</span>
-                    <button style={{ background: "#00f5d4", color: "#000", border: "none", padding: "4px 15px", borderRadius: "4px", fontSize: "10px", fontWeight: "bold" }}>RUN</button>
+                    {isRunning ? (
+                      <button onClick={stopApp} style={{ background: "#eb4d4b", color: "#fff", border: "none", padding: "4px 15px", borderRadius: "4px", fontSize: "10px", fontWeight: "bold", cursor: "pointer" }}>STOP</button>
+                    ) : (
+                      <button onClick={runApp} style={{ background: "#00f5d4", color: "#000", border: "none", padding: "4px 15px", borderRadius: "4px", fontSize: "10px", fontWeight: "bold", cursor: "pointer" }}>RUN</button>
+                    )}
                   </div>
                   <textarea value={code} onChange={e => setCode(e.target.value)} style={{ flex: 1, background: "transparent", color: "#00f5d4", border: "none", padding: "20px", fontFamily: "monospace", outline: "none", resize: "none" }} />
                 </>
@@ -404,10 +502,15 @@ export default function PiLab({ onBackToMenu }) {
                 </div>
              )}
 
-             <div style={{ height: "120px", background: "#000", padding: "15px", color: "#444", fontSize: "10px", fontFamily: "monospace", borderTop: "1px solid #1c1c3f" }}>
-                [DIAGRAM_RAW]: {JSON.stringify({ parts: parts.length, wires: wires.length })}<br/>
-                [BCM] Initializing pins from CM5 DTS...<br/>
-                [I2C] Bus 1 found: PCF8523 at 0x68.
+             <div style={{ height: "120px", background: "#000", padding: "15px", color: "#00f5d4", fontSize: "10px", fontFamily: "monospace", borderTop: "1px solid #1c1c3f", overflowY: "auto" }}>
+                {logs.map((L, i) => <div key={i}>{L}</div>)}
+                {!logs.length && (
+                  <>
+                    [SYSTEM] CM5 Lite Digital Twin Online.<br/>
+                    [DTS] Loaded 46 Pin Profiles.<br/>
+                    [I2C] PCF8523 Ready at 0x68.
+                  </>
+                )}
              </div>
           </motion.div>
         )}
