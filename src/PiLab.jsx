@@ -68,7 +68,39 @@ export default function PiLab({ onBackToMenu }) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [engine] = useState(() => new PiLabEngine());
   const [simResults, setSimResults] = useState({ voltages: {}, faults: [] });
-  const [code, setCode] = useState("# Raspberry Pi 5 Python\nimport RPi.GPIO as GPIO\nGPIO.setmode(GPIO.BCM)\nGPIO.setup(17, GPIO.OUT)\nGPIO.output(17, 1)");
+  const [code, setCode] = useState(`# Raspberry Pi 5 Digital Twin
+import RPi.GPIO as GPIO
+import time
+
+# Use BCM Pin Numbering
+GPIO.setmode(GPIO.BCM)
+
+# Set GPIO 17 (Pin 11) as Output
+GPIO.setup(17, GPIO.OUT)
+
+print("Pi-5 Digital Twin Online!")
+
+try:
+    while True:
+        GPIO.output(17, True)
+        print("LED ON")
+        time.sleep(0.5)
+        
+        GPIO.output(17, False)
+        print("LED OFF")
+        time.sleep(0.5)
+except:
+    GPIO.cleanup()
+`);
+
+  // 🚀 Skulpt Engine Loader
+  useEffect(() => {
+    if (window.Sk) return;
+    const s1 = document.createElement("script"); s1.src = "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js";
+    const s2 = document.createElement("script"); s2.src = "https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js";
+    document.head.appendChild(s1);
+    document.head.appendChild(s2);
+  }, []);
 
   // ── CIRCUIT RE-RESOLUTION (WOKWI-STYLE JSON SYNC) ─────────────────────────
 
@@ -124,7 +156,7 @@ export default function PiLab({ onBackToMenu }) {
 
   const stopApp = () => {
     setIsRunning(false);
-    setLogs(prev => [...prev, "[OK] Simulation Stopped."]);
+    setLogs(prev => [...prev, "[OK] Simulation Terminated."]);
     // Reset all pins to DTS defaults
     PINOUT.forEach(p => {
       engine.setPinMode(p.p, "INPUT");
@@ -133,55 +165,91 @@ export default function PiLab({ onBackToMenu }) {
   };
 
   const runApp = async () => {
+    if (!window.Sk) return setLogs(["[!] Skulpt not loaded yet."]);
     if (isRunning) stopApp();
+    
     setIsRunning(true);
     setLogs([]);
     setActiveTab("LOGS");
 
-    // BCM to Physical Mapping (Hardware Accurate)
+    // Hardware Precise BCM Mapping (Internal)
     const BCM_MAP = {};
     PINOUT.forEach(p => { if (p.bcm.startsWith("GPIO")) BCM_MAP[parseInt(p.bcm.replace("GPIO", ""))] = p.p; });
-    // Additional common mappings
     BCM_MAP[2] = 3; BCM_MAP[3] = 5; BCM_MAP[14] = 8; BCM_MAP[15] = 10;
-
     let currentMode = "BCM";
 
-    const GPIO = {
-      OUT: "OUTPUT", IN: "INPUT", HIGH: 1, LOW: 0, BCM: "BCM", BOARD: "BOARD",
-      setmode: (m) => { currentMode = m; },
-      setup: (pin, mode) => {
-        const physicalPin = currentMode === "BCM" ? BCM_MAP[pin] : pin;
-        if (physicalPin) engine.setPinMode(physicalPin, mode);
-      },
-      output: (pin, val) => {
-        const physicalPin = currentMode === "BCM" ? BCM_MAP[pin] : pin;
-        if (physicalPin) engine.setPinState(physicalPin, val);
-      },
-      input: (pin) => {
-        const physicalPin = currentMode === "BCM" ? BCM_MAP[pin] : pin;
-        return physicalPin ? engine.getPinState(physicalPin) : 0;
-      },
-      cleanup: () => stopApp()
-    };
+    // 🐍 Define RPi.GPIO Builtin Module for Skulpt
+    window.Sk.builtinFiles = window.Sk.builtinFiles || { files: {} };
+    window.Sk.builtinFiles.files["src/builtin/RPi/__init__.js"] = "var $builtinmodule = function(name) { return {}; };";
+    window.Sk.builtinFiles.files["src/builtin/RPi/GPIO.js"] = `
+      var $builtinmodule = function(name) {
+        var mod = {};
+        mod.BCM = new Sk.builtin.int_(11);
+        mod.BOARD = new Sk.builtin.int_(10);
+        mod.OUT = new Sk.builtin.str("OUTPUT");
+        mod.IN = new Sk.builtin.str("INPUT");
+        mod.HIGH = new Sk.builtin.int_(1);
+        mod.LOW = new Sk.builtin.int_(0);
 
-    const sleep = (ms) => new Promise(res => setTimeout(res, ms));
-    const print = (msg) => setLogs(prev => [...prev, `> ${msg}`]);
+        mod.setmode = new Sk.builtin.func(function(m) { });
+        mod.setup = new Sk.builtin.func(function(pin, mode) {
+          const p = Sk.ffi.remapToJs(pin);
+          const m = Sk.ffi.remapToJs(mode);
+          window.dispatchEvent(new CustomEvent("hw-setup", { detail: { pin: p, mode: m } }));
+        });
+        mod.output = new Sk.builtin.func(function(pin, val) {
+          const p = Sk.ffi.remapToJs(pin);
+          const v = Sk.ffi.remapToJs(val);
+          window.dispatchEvent(new CustomEvent("hw-output", { detail: { pin: p, val: v } }));
+        });
+        mod.cleanup = new Sk.builtin.func(function() { 
+          window.dispatchEvent(new CustomEvent("hw-stop")); 
+        });
+        return mod;
+      };
+    `;
+
+    // Listeners for Skulpt-to-Engine Bridge
+    const onHwSetup = (e) => {
+      const physical = currentMode === "BCM" ? BCM_MAP[e.detail.pin] : e.detail.pin;
+      if (physical) engine.setPinMode(physical, e.detail.mode);
+    };
+    const onHwOutput = (e) => {
+      const physical = currentMode === "BCM" ? BCM_MAP[e.detail.pin] : e.detail.pin;
+      if (physical) engine.setPinState(physical, e.detail.val ? 1 : 0);
+    };
+    
+    window.addEventListener("hw-setup", onHwSetup);
+    window.addEventListener("hw-output", onHwOutput);
+    window.addEventListener("hw-stop", stopApp);
+
+    const outHandler = (text) => setLogs(prev => [...prev, text.trim()]);
+    
+    window.Sk.configure({
+      output: outHandler,
+      read: (x) => {
+        if (window.Sk.builtinFiles === undefined || window.Sk.builtinFiles["files"][x] === undefined) throw "File not found: " + x;
+        return window.Sk.builtinFiles["files"][x];
+      },
+      yieldLimit: 100,
+      __future__: window.Sk.python3
+    });
 
     try {
-      const func = new Function("GPIO", "sleep", "print", "iot", `
-        (async () => {
-          try {
-            ${code}
-          } catch(e) {
-            print("RUNTIME ERROR: " + e.message);
-          }
-        })();
-      `);
-
-      func(GPIO, sleep, print, iotManager);
-      setLogs(prev => [...prev, "[OK] Script Started..."]);
+      setLogs(prev => [...prev, "[OK] Compiling Python..."]);
+      const promise = window.Sk.misceval.asyncToPromise(() => {
+        return window.Sk.importMainWithBody("<stdin>", false, code, true);
+      });
+      
+      promise.then(() => {
+        setIsRunning(false);
+        setLogs(prev => [...prev, "[OK] Script Finished."]);
+      }).catch(err => {
+        setLogs(prev => [...prev, "[!] RUNTIME ERROR: " + err.toString()]);
+        setIsRunning(false);
+      });
     } catch (err) {
-      setLogs(prev => [...prev, "[!] SYNTAX ERROR: " + err.message]);
+      setLogs(prev => [...prev, "[!] SYNTAX ERROR: " + err.toString()]);
       setIsRunning(false);
     }
   };
