@@ -1,0 +1,1003 @@
+{
+	"log": {
+		"version": "1.2",
+		"creator": {
+			"name": "Insomnia REST Client",
+			"version": "insomnia.desktop.app:v12.4.0"
+		},
+		"entries": [
+			{
+				"startedDateTime": "2026-03-31T12:24:07.037Z",
+				"time": 995.185,
+				"request": {
+					"method": "POST",
+					"url": "http://iot-gateway-api-service.onrender.com/api/workflows",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "x-api-key",
+							"value": "1f8a6a967a4ef527bf01c8da8feb736bdd78336759f7c662"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"name\": \"Hot\",\n\t\"rule\": {\n\t\t\"field\": \"temperature\",\n\t\t\"op\": \">\",\n\t\t\"value\": 30\n\t},\n\t\"action\": {\n\t\t\"type\": \"webhook\",\n\t\t\"url\": \"https://webhook.site/750b60ed-84cb-430f-b6e2-3b8e77cde01d\"\n\t}\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "date",
+							"value": "Sun, 09 Nov 2025 10:37:09 GMT"
+						},
+						{
+							"name": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "cf-ray",
+							"value": "99bcac52888b9368-MAA"
+						},
+						{
+							"name": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"name": "etag",
+							"value": "W/\"136-m/jpkoKgIRw7mI3+aJjE1B/Np9U\""
+						},
+						{
+							"name": "rndr-id",
+							"value": "b5b1f055-cbfe-42dd"
+						},
+						{
+							"name": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"name": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"name": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"name": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"name": "server",
+							"value": "cloudflare"
+						},
+						{
+							"name": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"content": {
+						"size": 310,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"id\":\"481ffc5b-075c-47c5-b99b-82bf3e8f3cba\",\"channel_id\":\"5cf957df-1fec-46b3-be11-b1b39bf1fc40\",\"name\":\"Hot\",\"enabled\":true,\"rule\":{\"op\":\">\",\"field\":\"temperature\",\"value\":30},\"action\":{\"url\":\"https://webhook.site/750b60ed-84cb-430f-b6e2-3b8e77cde01d\",\"type\":\"webhook\"},\"created_at\":\"2025-11-09T10:37:09.493Z\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 995.185,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Create a Workflow"
+			},
+			{
+				"startedDateTime": "2026-03-31T12:24:07.037Z",
+				"time": 2023.8740000000003,
+				"request": {
+					"method": "POST",
+					"url": "http://iot-gateway-api-service.onrender.com/api/import/csv",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "x-api-key",
+							"value": "1f8a6a967a4ef527bf01c8da8feb736bdd78336759f7c662"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "multipart/form-data",
+						"params": [
+							{
+								"name": "file",
+								"fileName": "C:\\Users\\Prajwal\\Downloads\\Export_CSV-1762683967448.csv"
+							}
+						]
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "date",
+							"value": "Sun, 09 Nov 2025 10:29:16 GMT"
+						},
+						{
+							"name": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "cf-ray",
+							"value": "99bca0c33d8d9365-MAA"
+						},
+						{
+							"name": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"name": "etag",
+							"value": "W/\"15-advVaqRE9t8GYfdUo9vO1WhNZwc\""
+						},
+						{
+							"name": "rndr-id",
+							"value": "64f32ec8-f124-4d1e"
+						},
+						{
+							"name": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"name": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"name": "x-ratelimit-limit",
+							"value": "60"
+						},
+						{
+							"name": "x-ratelimit-remaining",
+							"value": "59"
+						},
+						{
+							"name": "x-ratelimit-reset",
+							"value": "1762684217"
+						},
+						{
+							"name": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"name": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"name": "server",
+							"value": "cloudflare"
+						},
+						{
+							"name": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"content": {
+						"size": 21,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"ok\":true,\"count\":1}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 2023.8740000000003,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Import CSV data"
+			},
+			{
+				"startedDateTime": "2026-03-31T12:24:07.037Z",
+				"time": 1552.099,
+				"request": {
+					"method": "GET",
+					"url": "http://iot-gateway-api-service.onrender.com/api/charts/series",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "x-api-key",
+							"value": "1f8a6a967a4ef527bf01c8da8feb736bdd78336759f7c662"
+						}
+					],
+					"queryString": [
+						{
+							"name": "field",
+							"value": "temperature"
+						},
+						{
+							"name": "limit",
+							"value": "50"
+						}
+					],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "date",
+							"value": "Sun, 09 Nov 2025 10:42:47 GMT"
+						},
+						{
+							"name": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "cf-ray",
+							"value": "99bcb490d9a7936b-MAA"
+						},
+						{
+							"name": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"name": "etag",
+							"value": "W/\"f6-+3sFMOOSTsjA5UpF2ID6uQS1tqE\""
+						},
+						{
+							"name": "rndr-id",
+							"value": "ce69e10d-132c-45df"
+						},
+						{
+							"name": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"name": "x-min-poll-interval",
+							"value": "5"
+						},
+						{
+							"name": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"name": "x-ratelimit-limit",
+							"value": "120"
+						},
+						{
+							"name": "x-ratelimit-remaining",
+							"value": "118"
+						},
+						{
+							"name": "x-ratelimit-reset",
+							"value": "1762685016"
+						},
+						{
+							"name": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"name": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"name": "server",
+							"value": "cloudflare"
+						},
+						{
+							"name": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"content": {
+						"size": 246,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "[{\"ts\":\"2025-11-09T10:17:35.081Z\",\"value\":\"23.9\"},{\"ts\":\"2025-11-09T10:17:35.081Z\",\"value\":\"24.9\"},{\"ts\":\"2025-11-09T10:38:03.812Z\",\"value\":\"30.2\"},{\"ts\":\"2025-11-09T10:40:10.617Z\",\"value\":\"31.2\"},{\"ts\":\"2025-11-09T10:41:24.934Z\",\"value\":\"29.8\"}]"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 1552.099,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Fetch Series Charts "
+			},
+			{
+				"startedDateTime": "2026-03-31T12:24:07.037Z",
+				"time": 632.751,
+				"request": {
+					"method": "GET",
+					"url": "https://iot-gateway-api-service.onrender.com/api/readings/latest",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "x-api-key",
+							"value": "1f8a6a967a4ef527bf01c8da8feb736bdd78336759f7c662"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "date",
+							"value": "Tue, 24 Mar 2026 13:41:26 GMT"
+						},
+						{
+							"name": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "cf-ray",
+							"value": "9e1617e88ae841be-MAA"
+						},
+						{
+							"name": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"name": "cache-control",
+							"value": "private, max-age=5"
+						},
+						{
+							"name": "etag",
+							"value": "W/\"1762779606541\""
+						},
+						{
+							"name": "last-modified",
+							"value": "Mon, 10 Nov 2025 13:00:06 GMT"
+						},
+						{
+							"name": "rndr-id",
+							"value": "b0b46063-180f-4d6e"
+						},
+						{
+							"name": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"name": "x-min-poll-interval",
+							"value": "5"
+						},
+						{
+							"name": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"name": "x-ratelimit-limit",
+							"value": "120"
+						},
+						{
+							"name": "x-ratelimit-remaining",
+							"value": "117"
+						},
+						{
+							"name": "x-ratelimit-reset",
+							"value": "1774359745"
+						},
+						{
+							"name": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"name": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"name": "server",
+							"value": "cloudflare"
+						},
+						{
+							"name": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"content": {
+						"size": 81,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"ts\":\"2025-11-10T13:00:06.541Z\",\"fields\":{\"humidity\":24.71,\"temperature\":24.71}}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 632.751,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Fetch Latest IOT Data"
+			},
+			{
+				"startedDateTime": "2026-03-31T12:24:07.037Z",
+				"time": 2766.2810000000004,
+				"request": {
+					"method": "POST",
+					"url": "http://iot-gateway-api-service.onrender.com/api/readings",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "x-api-key",
+							"value": "1f8a6a967a4ef527bf01c8da8feb736bdd78336759f7c662"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\"temperature\":29.8,\"humidity\":42.1}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 202,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "date",
+							"value": "Fri, 27 Mar 2026 13:36:23 GMT"
+						},
+						{
+							"name": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "cf-ray",
+							"value": "9e2ec89d09abc739-BOM"
+						},
+						{
+							"name": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"name": "etag",
+							"value": "W/\"b-Ai2R8hgEarLmHKwesT1qcY913ys\""
+						},
+						{
+							"name": "rndr-id",
+							"value": "7898c3a8-f807-42b4"
+						},
+						{
+							"name": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"name": "x-min-poll-interval",
+							"value": "5"
+						},
+						{
+							"name": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"name": "x-ratelimit-limit",
+							"value": "60"
+						},
+						{
+							"name": "x-ratelimit-remaining",
+							"value": "59"
+						},
+						{
+							"name": "x-ratelimit-reset",
+							"value": "1774618644"
+						},
+						{
+							"name": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"name": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"name": "server",
+							"value": "cloudflare"
+						},
+						{
+							"name": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"content": {
+						"size": 11,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"ok\":true}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 2766.2810000000004,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Push Data to Cloud"
+			},
+			{
+				"startedDateTime": "2026-03-31T12:24:07.037Z",
+				"time": 1371.864,
+				"request": {
+					"method": "POST",
+					"url": "http://iot-gateway-api-service.onrender.com/api/channels/5cf957df-1fec-46b3-be11-b1b39bf1fc40/keys",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\"scope\":\"readwrite\"}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "date",
+							"value": "Sun, 09 Nov 2025 10:14:22 GMT"
+						},
+						{
+							"name": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "cf-ray",
+							"value": "99bc8af4bcd19368-MAA"
+						},
+						{
+							"name": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"name": "etag",
+							"value": "W/\"81-p1qN6n7J9R4bzzMZ90fhCUaKftQ\""
+						},
+						{
+							"name": "rndr-id",
+							"value": "5db865c3-24a4-45e1"
+						},
+						{
+							"name": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"name": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"name": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"name": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"name": "server",
+							"value": "cloudflare"
+						},
+						{
+							"name": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"content": {
+						"size": 129,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"key\":\"9fed78faeb038082a0890ba2759ee073ff000482682c6ac3\",\"scope\":\"readwrite\",\"channelId\":\"5cf957df-1fec-46b3-be11-b1b39bf1fc40\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 1371.864,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Fetch ReadWrite API Key"
+			},
+			{
+				"startedDateTime": "2026-03-31T12:24:07.037Z",
+				"time": 1149.153,
+				"request": {
+					"method": "GET",
+					"url": "http://iot-gateway-api-service.onrender.com/api/export/csv",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.0.0"
+						},
+						{
+							"name": "x-api-key",
+							"value": "1f8a6a967a4ef527bf01c8da8feb736bdd78336759f7c662"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "date",
+							"value": "Sun, 09 Nov 2025 10:25:51 GMT"
+						},
+						{
+							"name": "content-type",
+							"value": "text/csv; charset=utf-8"
+						},
+						{
+							"name": "content-length",
+							"value": "66"
+						},
+						{
+							"name": "cf-ray",
+							"value": "99bc9bc44b85937a-MAA"
+						},
+						{
+							"name": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"name": "content-disposition",
+							"value": "attachment; filename=\"readings.csv\""
+						},
+						{
+							"name": "etag",
+							"value": "W/\"42-uZr1KpZ0pLlMWWycHnIG9AyTJeE\""
+						},
+						{
+							"name": "rndr-id",
+							"value": "f0396060-3e06-4035"
+						},
+						{
+							"name": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"name": "x-ratelimit-limit",
+							"value": "120"
+						},
+						{
+							"name": "x-ratelimit-remaining",
+							"value": "119"
+						},
+						{
+							"name": "x-ratelimit-reset",
+							"value": "1762684011"
+						},
+						{
+							"name": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"name": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"name": "server",
+							"value": "cloudflare"
+						},
+						{
+							"name": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"content": {
+						"size": 66,
+						"mimeType": "text/csv; charset=utf-8",
+						"text": "\"ts\",\"humidity\",\"temperature\"\n\"2025-11-09T10:17:35.081Z\",42.1,24.9"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 1149.153,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Export CSV"
+			},
+			{
+				"startedDateTime": "2026-03-31T12:24:07.037Z",
+				"time": 2263.2889999999998,
+				"request": {
+					"method": "POST",
+					"url": "http://iot-gateway-api-service.onrender.com/api/channels",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\"name\":\"Demo\",\"allowedFields\":[\"temperature\",\"humidity\"]}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "date",
+							"value": "Sun, 09 Nov 2025 10:11:30 GMT"
+						},
+						{
+							"name": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "cf-ray",
+							"value": "99bc86b66dc49361-MAA"
+						},
+						{
+							"name": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"name": "etag",
+							"value": "W/\"ef-93Rb77Qtcmtd77kOaSi7fONY1/g\""
+						},
+						{
+							"name": "rndr-id",
+							"value": "f5985219-d167-4c65"
+						},
+						{
+							"name": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"name": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"name": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"name": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"name": "server",
+							"value": "cloudflare"
+						},
+						{
+							"name": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"content": {
+						"size": 239,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"id\":\"5cf957df-1fec-46b3-be11-b1b39bf1fc40\",\"name\":\"Demo\",\"description\":null,\"allowed_fields\":[\"temperature\",\"humidity\"],\"max_fields\":8,\"min_write_interval_seconds\":15,\"min_read_interval_seconds\":5,\"created_at\":\"2025-11-09T10:11:30.098Z\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 2263.2889999999998,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Create a IOT Channel"
+			},
+			{
+				"startedDateTime": "2026-03-31T12:24:07.037Z",
+				"time": 388.046,
+				"request": {
+					"method": "GET",
+					"url": "https://iot-gateway-api-service.onrender.com/health",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/12.0.0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "date",
+							"value": "Fri, 27 Mar 2026 13:22:13 GMT"
+						},
+						{
+							"name": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"name": "cf-ray",
+							"value": "9e2eb3e28f333f85-BOM"
+						},
+						{
+							"name": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"name": "etag",
+							"value": "W/\"b-Ai2R8hgEarLmHKwesT1qcY913ys\""
+						},
+						{
+							"name": "rndr-id",
+							"value": "a123eddd-ba9e-4f48"
+						},
+						{
+							"name": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"name": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"name": "x-render-origin-server",
+							"value": "Render"
+						},
+						{
+							"name": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"name": "server",
+							"value": "cloudflare"
+						},
+						{
+							"name": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"content": {
+						"size": 11,
+						"mimeType": "application/json; charset=utf-8",
+						"text": "{\"ok\":true}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 388.046,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "Health Check"
+			}
+		]
+	}
+}

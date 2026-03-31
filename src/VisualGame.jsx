@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
+import PiSimulator from "./PiSimulator";
 
 // ── UTILS ──────────────────────────────────────────────────────────────────
 
@@ -317,7 +318,8 @@ const PIPELINE = [
   { id: "M", tag: "MODEL", label: "Synaptic Mapping", color: "#a55eea" },
   { id: "D", tag: "DEVICE", label: "DVFS Optimization", color: "#fc5c65" },
   { id: "C", tag: "CLOUD", label: "Topic Provisioning", color: "#686de0" },
-  { id: "A", tag: "ACT", label: "Remote Actuation", color: "#eb4d4b" }
+  { id: "A", tag: "ACT", label: "Remote Actuation", color: "#eb4d4b" },
+  { id: "P", tag: "PROTO", label: "Pi Hardware Logic", color: "#00f5d4" }
 ];
 
 export default function VisualGame({ score, setScore, onBackToMenu }) {
@@ -423,6 +425,7 @@ export default function VisualGame({ score, setScore, onBackToMenu }) {
               {activeId === "D" && <PowerTask onComplete={() => complete("D")} />}
               {activeId === "C" && <CloudTask onComplete={() => complete("C")} />}
               {activeId === "A" && <ActTask onComplete={() => complete("A")} />}
+              {activeId === "P" && <PiSimulator onComplete={() => complete("P")} />}
 
             </motion.div>
           </motion.div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import QuizGame from "./QuizGame";
 import VisualGame from "./VisualGame";
+import PiLab from "./PiLab";
 
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=swap');
@@ -68,12 +69,12 @@ export default function App() {
               </motion.span>
             </div>
             
-            <h1 style={{ fontFamily: "Orbitron", fontSize: "clamp(26px, 6vw, 48px)", letterSpacing: "5px", color: "#00f5d4", textShadow: "0 0 30px #00f5d444", marginBottom: "5px" }}>
+            <h1 style={{ fontFamily: "Orbitron", fontSize: "clamp(26px, 6vw, 40px)", letterSpacing: "5px", color: "#00f5d4", textShadow: "0 0 30px #00f5d444", marginBottom: "5px" }}>
               AI ANALYTICS HUB
             </h1>
-            <p style={{ color: "#555", fontSize: "11px", letterSpacing: "4px", marginBottom: "40px" }}>BMSCE ECE — SENSOR SYSTEMS INTERFACE</p>
+            <p style={{ color: "#555", fontSize: "10px", letterSpacing: "4px", marginBottom: "30px" }}>BMSCE ECE — SENSOR SYSTEMS INTERFACE</p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "40px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "15px", marginBottom: "30px" }}>
               {/* Quiz Mode */}
               <motion.div
                 whileHover={{ scale: 1.03 }}
@@ -107,8 +108,26 @@ export default function App() {
                 }}
               >
                 <div style={{ fontSize: "40px", marginBottom: "10px" }}>⚡</div>
-                <div style={{ fontFamily: "Orbitron", color: "#f7b731", fontSize: "16px", marginBottom: "10px" }}>SIGNAL MASTER</div>
-                <p style={{ color: "#444", fontSize: "11px", lineHeight: "1.5" }}>Fast-action anomaly filtering. Sharpen your sensor reflex.</p>
+                <div style={{ fontFamily: "Orbitron", color: "#f7b731", fontSize: "16px", marginBottom: "10px" }}>EDGE TECH LAB</div>
+                <p style={{ color: "#444", fontSize: "11px", lineHeight: "1.5" }}>8-Mission industrial AIoT pipeline. Establish the sensor-to-actuation flow.</p>
+              </motion.div>
+
+              {/* Pi Lab Mode */}
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setMode("pilab")}
+                style={{
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1.5px solid #a55eea33",
+                  borderRadius: "20px",
+                  padding: "30px 15px",
+                  cursor: "pointer"
+                }}
+              >
+                <div style={{ fontSize: "40px", marginBottom: "10px" }}>🥧</div>
+                <div style={{ fontFamily: "Orbitron", color: "#a55eea", fontSize: "16px", marginBottom: "10px" }}>PI LAB</div>
+                <p style={{ color: "#444", fontSize: "11px", lineHeight: "1.5" }}>Digital Twin / Engineering Lab. High-fidelity hardware prototyping.</p>
               </motion.div>
             </div>
 
@@ -151,6 +170,17 @@ export default function App() {
             exit={{ opacity: 0 }}
           >
             <VisualGame score={totalScore} setScore={setTotalScore} onBackToMenu={() => setMode("menu")} onAchievement={handleAchievement} />
+          </motion.div>
+        )}
+
+        {mode === "pilab" && (
+          <motion.div 
+            key="pilab" 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+          >
+            <PiLab onBackToMenu={() => setMode("menu")} />
           </motion.div>
         )}
       </AnimatePresence>
