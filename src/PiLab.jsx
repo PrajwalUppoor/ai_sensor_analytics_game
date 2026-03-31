@@ -73,8 +73,8 @@ export default function PiLab({ onBackToMenu }) {
   // ── CIRCUIT RE-RESOLUTION (WOKWI-STYLE JSON SYNC) ─────────────────────────
 
   useEffect(() => {
-    // Sync to Engine
-    engine.nodes.clear();
+    // Sync to Engine structure
+    engine.clearGraph();
     PINOUT.forEach(p => engine.addNode(`pin-${p.p}`, p.type));
     wires.forEach(w => engine.addWire(w.from, w.to));
   }, [parts, wires]);
@@ -138,13 +138,29 @@ export default function PiLab({ onBackToMenu }) {
     setLogs([]);
     setActiveTab("LOGS");
 
-    // RPi.GPIO Shim
+    // BCM to Physical Mapping (Hardware Accurate)
+    const BCM_MAP = {};
+    PINOUT.forEach(p => { if (p.bcm.startsWith("GPIO")) BCM_MAP[parseInt(p.bcm.replace("GPIO", ""))] = p.p; });
+    // Additional common mappings
+    BCM_MAP[2] = 3; BCM_MAP[3] = 5; BCM_MAP[14] = 8; BCM_MAP[15] = 10;
+
+    let currentMode = "BCM";
+
     const GPIO = {
-      OUT: "OUTPUT", IN: "INPUT", HIGH: 1, LOW: 0, BCM: "BCM",
-      setmode: () => {},
-      setup: (pin, mode) => engine.setPinMode(pin, mode),
-      output: (pin, val) => engine.setPinState(pin, val),
-      input: (pin) => engine.getPinState(pin),
+      OUT: "OUTPUT", IN: "INPUT", HIGH: 1, LOW: 0, BCM: "BCM", BOARD: "BOARD",
+      setmode: (m) => { currentMode = m; },
+      setup: (pin, mode) => {
+        const physicalPin = currentMode === "BCM" ? BCM_MAP[pin] : pin;
+        if (physicalPin) engine.setPinMode(physicalPin, mode);
+      },
+      output: (pin, val) => {
+        const physicalPin = currentMode === "BCM" ? BCM_MAP[pin] : pin;
+        if (physicalPin) engine.setPinState(physicalPin, val);
+      },
+      input: (pin) => {
+        const physicalPin = currentMode === "BCM" ? BCM_MAP[pin] : pin;
+        return physicalPin ? engine.getPinState(physicalPin) : 0;
+      },
       cleanup: () => stopApp()
     };
 
@@ -531,17 +547,33 @@ export default function PiLab({ onBackToMenu }) {
 
 function getCoords(id, parts) {
   if (!id) return null;
+  // CM5 Header Coordinates (Synced with SVG)
   if (id.startsWith("pin-")) {
     const num = parseInt(id.split("-")[1]) - 1;
-    return { x: 100 + 160 + (num % 2 === 0 ? 10 : 30), y: 100 + 40 + 10 + Math.floor(num / 2) * 12.5 };
-  } else if (id.startsWith("brd-")) {
+    const xBase = 80 + 200;
+    const yBase = 80 + 60;
+    const x = xBase + (num % 2 === 0 ? 12 : 33);
+    const y = yBase + 12 + Math.floor(num / 2) * 13.5;
+    return { x, y };
+  } 
+  // Breadboard Coordinates (Synced with SVG)
+  else if (id.startsWith("brd-")) {
     const [_, r, c] = id.split("-");
-    return { x: 450 + 20 + c * 17.5, y: 100 + 20 + r * 15.5 };
-  } else if (id.startsWith("pt-")) {
-    const [ptId, pinId] = id.split("-");
+    const xBase = 480;
+    const yBase = 80;
+    return { x: xBase + 70 + parseInt(c) * 15.5, y: yBase + 25 + parseInt(r) * 15.5 };
+  } 
+  // Component Coordinates (ID split fix)
+  else if (id.includes("-")) {
+    const segments = id.split("-");
+    if (segments[0] !== "pt") return null;
+    const ptId = `${segments[0]}-${segments[1]}`;
+    const pinId = segments[2];
+    
     const p = parts.find(part => part.id === ptId);
     if (!p) return null;
     const pinDef = PART_DATA[p.type].pins.find(pin => pin.id === pinId);
+    if (!pinDef) return null;
     return { x: p.x + pinDef.x, y: p.y + pinDef.y };
   }
   return null;
